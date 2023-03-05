@@ -25,8 +25,9 @@ namespace TelegramBotProject
         private static string destinationFilePathGlobal;
         static string fileName;
         private static CancellationTokenSource cts = new CancellationTokenSource();
-    
-        
+        static  string editedPhoto = @"C:\Users\Max\Desktop\Saltman Edited\" + fileName + ".jpg";
+        static bool introSended = false; 
+
         static void Main(string[] args)
         {
             var cts = new CancellationTokenSource();
@@ -60,12 +61,31 @@ namespace TelegramBotProject
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
 
+                if (!introSended)
+                {
+                    // Send an introduction message to the user
+                    string introMessage = "Hello! I am a bot that can help you edit your photos with filters. " +
+                        "To get started, send me a photo and I'll give you some filter options to choose from. " +
+                        "After you choose a filter, I'll send you back the edited photo. " +
+                        "Type /help to see this message again.";
+                    await botClient.SendTextMessageAsync(message.Chat.Id, introMessage);
+                    introSended = true; 
+                }
+
+
                 if (message.Text != null)
                 {
 
                     Console.WriteLine($" ID =  {message.Chat.Id}  Name = {message.Chat.FirstName}  Location =  {message.Chat.Location}");
 
-
+                 if(message.Text.ToLower().Equals("/help"))
+                    {
+                        string introMessage = "Hello! I am a bot that can help you edit your photos with filters. " +
+                      "To get started, send me a photo and I'll give you some filter options to choose from. " +
+                      "After you choose a filter, I'll send you back the edited photo. " +
+                      "Type /help to see this message again.";
+                        await botClient.SendTextMessageAsync(message.Chat.Id, introMessage);
+                    }
 
 
                     switch (message.Text.ToLower())
@@ -144,7 +164,7 @@ namespace TelegramBotProject
                             response = "The largest ocean in the world is the Pacific Ocean.";
                             break;
                         default:
-                            response = "You can search it on Internet";
+                            response = "Send a photo !!!";
                             break;
                     }
 
@@ -249,16 +269,12 @@ namespace TelegramBotProject
 
                 Console.WriteLine("Entered the callback query ");
                 Console.WriteLine("Destionation file path = " + destinationFilePathGlobal);
-                string option = update.CallbackQuery.Data;
+                string option = update.CallbackQuery.Data.ToLower();
 
                 switch (option)
                 {
                     case "vintage":
                         {
-
-                            //
-                            // starts the process  first is the address of dropLet the second one is the file addres which will be sent to dropLet
-
                             Thread photoShopThread = new Thread(async () =>
                             {
 
@@ -276,15 +292,83 @@ namespace TelegramBotProject
 
                             photoShopThread.Start();
                             photoShopThread.Join();
+                            editedPhoto = @"C:\Users\Max\Desktop\Saltman Edited\" + fileName + ".jpg";
                         }
                         break;
+                    case "insta":
+                        Thread photoShopThread2 = new Thread(async () =>
+                        {
+
+                            try
+                            {
+                                Process.Start(@"C:\Users\Max\Desktop\DropLets\Insta.exe", destinationFilePathGlobal)?.WaitForExit();
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle any exceptions that might be occurring
+                                Console.WriteLine($"An error occurred while running the process: {ex.Message}");
+                            }
+                        }
+                            );
+
+                        photoShopThread2.Start();
+                        photoShopThread2.Join();
+
+                        editedPhoto = @"C:\Users\Max\Desktop\Saltman Edited\" + fileName + ".jpg";
+
+                        break;
+
+                    case "height":
+                        Thread photoShopThread3 = new Thread(async () =>
+                        {
+
+                            try
+                            {
+                                Process.Start(@"C:\Users\Max\Desktop\DropLets\TelegramHeightResizer.exe", destinationFilePathGlobal)?.WaitForExit();
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle any exceptions that might be occurring
+                                Console.WriteLine($"An error occurred while running the process: {ex.Message}");
+                            }
+                        }
+                           );
+
+                        photoShopThread3.Start();
+                        photoShopThread3.Join();
+                        editedPhoto = @"C:\Users\Max\Downloads\Stickers\Resized Images\" + fileName + ".png";
+
+                        break;
+
+                    case "width":
+                        Thread photoShopThread4 = new Thread(async () =>
+                        {
+
+                            try
+                            {
+                                Process.Start(@"C:\Users\Max\Desktop\DropLets\TelegramWidthResizer.exe", destinationFilePathGlobal)?.WaitForExit();
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle any exceptions that might be occurring
+                                Console.WriteLine($"An error occurred while running the process: {ex.Message}");
+                            }
+                        }
+                           );
+
+                        photoShopThread4.Start();
+                        photoShopThread4.Join();
+                        editedPhoto = @"C:\Users\Max\Downloads\Stickers\Resized Images\" + fileName + ".png";
+
+                        break; 
+
 
                 };
 
                 try
                 {
 
-                    string editedPhoto = @"C:\Users\Max\Desktop\Saltman Edited\" + fileName + ".jpg";
+                 
                     Console.WriteLine("Edited photo path on local machine is : " + editedPhoto);
                     await using Stream stream = System.IO.File.OpenRead(editedPhoto);
                     Console.WriteLine("Open read passed ");
@@ -329,7 +413,7 @@ namespace TelegramBotProject
                 new []
                 {
                     InlineKeyboardButton.WithCallbackData(text: "Make 512 Height", callbackData: "height"),
-                    InlineKeyboardButton.WithCallbackData(text: "Make 512 Width", callbackData: "Width"),
+                    InlineKeyboardButton.WithCallbackData(text: "Make 512 Width", callbackData: "width"),
                 },
             });
 
