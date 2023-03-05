@@ -11,6 +11,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Args;
+using Microsoft.VisualBasic.FileIO;
 
 namespace TelegramBotProject
 {
@@ -18,9 +21,15 @@ namespace TelegramBotProject
     {
 
         static TelegramBotClient botClient = new TelegramBotClient("6166133846:AAGKCg8QsHwDAM9nc3lWEuI_EmL72k1xFAs");
+        private static string destinationFilePathGlobal;
+
         static void Main(string[] args)
         {
+        
+
             botClient.StartReceiving(Update, Error);
+          
+          
 
             Console.ReadLine();
         }
@@ -38,87 +47,91 @@ namespace TelegramBotProject
 
                 Console.WriteLine($" ID =  {message.Chat.Id}  Name = {message.Chat.FirstName}  Location =  {message.Chat.Location}");
 
-                switch (message.Text.ToLower())
-                {
-                    case "hi":
-                    case "hello":
-                    case "hey":
-                        response = "Hello, how can I assist you?";
-                        break;
-                    case "what's your name?":
-                    case "who are you?":
-                        response = "My name is Bot, pleased to meet you!";
-                        break;
-                    case "how are you?":
-                    case "how are you doing?":
-                        response = "I'm doing well, thanks for asking. How can I help you?";
-                        break;
-                    case "what can you do?":
-                    case "what are your capabilities?":
-                        response = "I can perform a variety of tasks, such as answer questions, give recommendations, and provide information. What can I help you with?";
-                        break;
-                    case "thank you":
-                    case "thanks":
-                        response = "You're welcome!";
-                        break;
-                    case "bye":
-                    case "goodbye":
-                        response = "Goodbye, have a great day!";
-                        break;
-                    case "what's the weather like?":
-                    case "what's the weather forecast?":
-                        response = "The weather forecast for today is partly cloudy with a high of 75°F.";
-                        break;
-                    case "what's the time?":
-                    case "what time is it?":
-                        response = $"The current time is {DateTime.Now.ToString("h:mm tt")}.";
-                        break;
-                    case "tell me a joke":
-                    case "make me laugh":
-                        response = "Why did the chicken cross the road? To get to the other side!";
-                        break;
-                    case "what's your favorite color?":
-                        response = "I don't have a favorite color, I'm a bot!";
-                        break;
-                    case "what's your favorite food?":
-                        response = "I don't eat, I'm a bot!";
-                        break;
-                    case "how old are you?":
-                        response = "I don't age, I'm a bot!";
-                        break;
-                    case "what's the meaning of life?":
-                        response = "That's a difficult question, what do you think the meaning of life is?";
-                        break;
-                    case "what's your favorite movie?":
-                        response = "I don't watch movies, I'm a bot!";
-                        break;
-                    case "do you have any siblings?":
-                        response = "No, I don't have any siblings, I'm a bot!";
-                        break;
-                    case "where are you from?":
-                        response = "I was created by a programmer, so you could say I'm from the internet!";
-                        break;
-                    case "what's the capital of France?":
-                        response = "The capital of France is Paris.";
-                        break;
-                    case "what's the largest country in the world?":
-                        response = "The largest country in the world is Russia.";
-                        break;
-                    case "what's the population of China?":
-                        response = "As of 2021, the population of China is approximately 1.4 billion people.";
-                        break;
-                    case "what's the tallest mountain in the world?":
-                        response = "The tallest mountain in the world is Mount Everest, which is located in the Himalayas.";
-                        break;
-                    case "what's the largest ocean in the world?":
-                        response = "The largest ocean in the world is the Pacific Ocean.";
-                        break;
-                    default:
-                        response = "You can search it on Internet";
-                        break;
-                }
 
-                await botClient.SendTextMessageAsync(message.Chat.Id, response);
+
+
+                            switch (message.Text.ToLower())
+                            {
+                                case "hi":
+                                case "hello":
+                                case "hey":
+                                    response = "Hello, how can I assist you?";
+                                    break;
+                                case "what's your name?":
+                                case "who are you?":
+                                    response = "My name is Bot, pleased to meet you!";
+                                    break;
+                                case "how are you?":
+                                case "how are you doing?":
+                                    response = "I'm doing well, thanks for asking. How can I help you?";
+                                    break;
+                                case "what can you do?":
+                                case "what are your capabilities?":
+                                    response = "I can perform a variety of tasks, such as answer questions, give recommendations, and provide information. What can I help you with?";
+                                    break;
+                                case "thank you":
+                                case "thanks":
+                                    response = "You're welcome!";
+                                    break;
+                                case "bye":
+                                case "goodbye":
+                                    response = "Goodbye, have a great day!";
+                                    break;
+                                case "what's the weather like?":
+                                case "what's the weather forecast?":
+                                    response = "The weather forecast for today is partly cloudy with a high of 75°F.";
+                                    break;
+                                case "what's the time?":
+                                case "what time is it?":
+                                    response = $"The current time is {DateTime.Now.ToString("h:mm tt")}.";
+                                    break;
+                                case "tell me a joke":
+                                case "make me laugh":
+                                    response = "Why did the chicken cross the road? To get to the other side!";
+                                    break;
+                                case "what's your favorite color?":
+                                    response = "I don't have a favorite color, I'm a bot!";
+                                    break;
+                                case "what's your favorite food?":
+                                    response = "I don't eat, I'm a bot!";
+                                    break;
+                                case "how old are you?":
+                                    response = "I don't age, I'm a bot!";
+                                    break;
+                                case "what's the meaning of life?":
+                                    response = "That's a difficult question, what do you think the meaning of life is?";
+                                    break;
+                                case "what's your favorite movie?":
+                                    response = "I don't watch movies, I'm a bot!";
+                                    break;
+                                case "do you have any siblings?":
+                                    response = "No, I don't have any siblings, I'm a bot!";
+                                    break;
+                                case "where are you from?":
+                                    response = "I was created by a programmer, so you could say I'm from the internet!";
+                                    break;
+                                case "what's the capital of France?":
+                                    response = "The capital of France is Paris.";
+                                    break;
+                                case "what's the largest country in the world?":
+                                    response = "The largest country in the world is Russia.";
+                                    break;
+                                case "what's the population of China?":
+                                    response = "As of 2021, the population of China is approximately 1.4 billion people.";
+                                    break;
+                                case "what's the tallest mountain in the world?":
+                                    response = "The tallest mountain in the world is Mount Everest, which is located in the Himalayas.";
+                                    break;
+                                case "what's the largest ocean in the world?":
+                                    response = "The largest ocean in the world is the Pacific Ocean.";
+                                    break;
+                                default:
+                                    response = "You can search it on Internet";
+                                    break;
+                            }
+
+                            await botClient.SendTextMessageAsync(message.Chat.Id, response);
+                        
             }
 
 
@@ -137,14 +150,14 @@ namespace TelegramBotProject
 
                 // saving the downloaded photo 
                 Console.WriteLine("");
-                string destinationFilePath = @"C:\Users\Max\Desktop\BotPhotos\" + fileName + ".jpg";
+                string destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName + ".jpg";
 
                 Console.WriteLine("Started already ");
 
                 // opening the file 
                 try
                 {
-                    await using Stream photoStream = System.IO.File.OpenWrite(destinationFilePath);
+                    await using Stream photoStream = System.IO.File.OpenWrite(destinationFilePathGlobal);
                     await botClient.DownloadFileAsync(filePath: filePath, destination: photoStream);
                     photoStream.Close();
 
@@ -157,24 +170,46 @@ namespace TelegramBotProject
                 }
 
 
-                // starts the process to edit the photo
-                Thread photoShopThread = new Thread(() =>
+                // Editing
+                ChooseAnFilter(message);
+                Thread.Sleep(3000);
+                botClient.GetUpdatesAsync();
+
+                string option = message.Text.ToLower();
+
+                Console.WriteLine("\n\n  option is equal to == " + option);
+                switch (option)
                 {
-                    try
-                    {
-                        Process.Start(@"C:\Users\Max\Desktop\DropLets\Vintage.exe", destinationFilePath)?.WaitForExit();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions that might be occurring
-                        Console.WriteLine($"An error occurred while running the process: {ex.Message}");
-                    }
-                });
+                    case "vintage":
+                        {
 
-                photoShopThread.Start();
-                photoShopThread.Join();
+                            //
+                            // starts the process  first is the address of dropLet the second one is the file addres which will be sent to dropLet
 
-                // sending back the edited photo
+                            Thread photoShopThread = new Thread(async () =>
+                            {
+
+                                try
+                                {
+                                    Process.Start(@"C:\Users\Max\Desktop\DropLets\Vintage.exe", destinationFilePathGlobal)?.WaitForExit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Handle any exceptions that might be occurring
+                                    Console.WriteLine($"An error occurred while running the process: {ex.Message}");
+                                }
+                            }
+                            );
+
+                            photoShopThread.Start();
+                            photoShopThread.Join();
+                        }
+                        break;
+
+                };
+
+
+
                 string editedPhoto = @"C:\Users\Max\Desktop\Saltman Edited\" + fileName + ".jpg";
                 Console.WriteLine("File nameeeeeee is : " + fileName);
                 Console.WriteLine("Edited photo path on local machine is : " + editedPhoto);
@@ -214,12 +249,12 @@ namespace TelegramBotProject
                 var filePath = fileInfo.FilePath;
 
                 // saving the downloaded file 
-                string destinationFilePath = @"C:\Users\Max\Desktop\BotPhotos\" + fileName;
+                string destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName;
 
                 Console.WriteLine("Started already ");
                 try
                 {
-                    await using Stream fileStream = System.IO.File.OpenWrite(destinationFilePath);
+                    await using Stream fileStream = System.IO.File.OpenWrite(destinationFilePathGlobal);
                     await botClient.DownloadFileAsync(filePath: filePath, destination: fileStream);
                     fileStream.Close();
                 }
@@ -231,30 +266,44 @@ namespace TelegramBotProject
                 await botClient.SendTextMessageAsync(message.Chat.Id, "Your Image Was Received");
 
 
-                //
-                // starts the process  first is the address of dropLet the second one is the file addres which will be sent to dropLet
+
+                // Editing
+
+                ChooseAnFilter(message);
 
 
+                string option = message.Text.ToLower();
 
-
-                Thread photoShopThread = new Thread(async () =>
+                Console.WriteLine("\n\n  option is equal to == " + option);
+                switch (option)
                 {
+                    case "vintage":
+                        {
 
-                    try
-                    {
-                        Process.Start(@"C:\Users\Max\Desktop\DropLets\Vintage.exe", destinationFilePath)?.WaitForExit();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions that might be occurring
-                        Console.WriteLine($"An error occurred while running the process: {ex.Message}");
-                    }
-                }
-                );
+                            //
+                            // starts the process  first is the address of dropLet the second one is the file addres which will be sent to dropLet
 
-                photoShopThread.Start();
-                photoShopThread.Join();
+                            Thread photoShopThread = new Thread(async () =>
+                            {
 
+                                try
+                                {
+                                    Process.Start(@"C:\Users\Max\Desktop\DropLets\Vintage.exe", destinationFilePathGlobal)?.WaitForExit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Handle any exceptions that might be occurring
+                                    Console.WriteLine($"An error occurred while running the process: {ex.Message}");
+                                }
+                            }
+                            );
+
+                            photoShopThread.Start();
+                            photoShopThread.Join();
+                        }
+                        break;
+
+                };
 
                 // sending back, the already edited photo 
 
@@ -292,16 +341,26 @@ namespace TelegramBotProject
             throw new NotImplementedException();
         }
 
-        private async static Task HandleButtonPress(Message message)
+
+        async private static void ChooseAnFilter(Message message)
         {
-            string buttonText = message.Text;
+           
+            
 
-            // Execute your code here
-            Console.WriteLine("You pressed the button: " + buttonText);
+                ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+                  {
+                        new KeyboardButton[] { "Vintage", "Variant 2" },
+                        new KeyboardButton[] { "Variant 3", "Variant 4"},
+                    })
+                {
+                    ResizeKeyboard = true
+                };
 
-            // Send a response back to the user
-            await botClient.SendTextMessageAsync(message.Chat.Id, "You pressed the button: " + buttonText);
+                Message sentMessage = await botClient.SendTextMessageAsync(chatId: message.Chat.Id, text: "Choose a Filter", replyMarkup: replyKeyboardMarkup);
+            Console.WriteLine("options received !!! ");
+
         }
+
 
 
     }
