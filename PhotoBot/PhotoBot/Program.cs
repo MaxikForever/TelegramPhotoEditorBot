@@ -46,8 +46,10 @@ namespace TelegramBotProject
 
          
             var message = update.Message;
-            if (message == null)
-                return;
+          
+
+            if (update != null && update.CallbackQuery != null)
+            Console.WriteLine("callback data = " + update.CallbackQuery.Data);
        
 
             if (message != null)
@@ -166,7 +168,7 @@ namespace TelegramBotProject
 
                     // saving the downloaded photo 
                     Console.WriteLine("");
-                    string destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName + ".jpg";
+                     destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName + ".jpg";
 
                     Console.WriteLine("Started already ");
 
@@ -206,13 +208,14 @@ namespace TelegramBotProject
 
                     Console.WriteLine("An image is received !!! ");
                     fileName = Guid.NewGuid().ToString();
+                    Console.WriteLine("\nFile name is " + fileName);
                     var fileId = update.Message.Document.FileId;
                     var fileInfo = await botClient.GetFileAsync(fileId);
                     var filePath = fileInfo.FilePath;
 
 
                     // saving the downloaded file 
-                    string destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName;
+                     destinationFilePathGlobal = @"C:\Users\Max\Desktop\BotPhotos\" + fileName + ".jpg";
 
                     Console.WriteLine("Started already ");
                     try
@@ -245,7 +248,7 @@ namespace TelegramBotProject
             {
 
                 Console.WriteLine("Entered the callback query ");
-
+                Console.WriteLine("Destionation file path = " + destinationFilePathGlobal);
                 string option = update.CallbackQuery.Data;
 
                 switch (option)
@@ -285,12 +288,12 @@ namespace TelegramBotProject
                     Console.WriteLine("Edited photo path on local machine is : " + editedPhoto);
                     await using Stream stream = System.IO.File.OpenRead(editedPhoto);
                     Console.WriteLine("Open read passed ");
-                    await botClient.SendPhotoAsync(chatId: message.Chat.Id, photo: new InputOnlineFile(content: stream), caption: "Here is your edited Photo!!!");
+                    await botClient.SendPhotoAsync(chatId: update.CallbackQuery.Message.Chat.Id, photo: new InputOnlineFile(content: stream), caption: "Here is your edited Photo!!!");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Some issues : \n  " + e.Message);
+                    Console.WriteLine("this is the message " + e.Message);
+                    await botClient.SendTextMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, e.Message);
                 }
 
                 Console.WriteLine("Message handling ended succsesfully ");
@@ -320,13 +323,13 @@ namespace TelegramBotProject
                 new []
                 {
                     InlineKeyboardButton.WithCallbackData(text: "Vintage", callbackData: "vintage"),
-                    InlineKeyboardButton.WithCallbackData(text: "Varianta2", callbackData: "12"),
+                    InlineKeyboardButton.WithCallbackData(text: "Insta", callbackData: "insta"),
                 },
                 // second row
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData(text: "Varianta2", callbackData: "21"),
-                    InlineKeyboardButton.WithCallbackData(text: "Varianta2", callbackData: "22"),
+                    InlineKeyboardButton.WithCallbackData(text: "Make 512 Height", callbackData: "height"),
+                    InlineKeyboardButton.WithCallbackData(text: "Make 512 Width", callbackData: "Width"),
                 },
             });
 
